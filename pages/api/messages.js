@@ -1,5 +1,8 @@
 import nextConnect from 'next-connect';
 import middleware from '../../middlewares/middleware';
+import PubNub from 'pubnub';
+
+const pubnub = new PubNub({ publishKey: process.env.PUBNUB_PUB_KEY, subscribeKey: process.env.PUBNUB_SUB_KEY });
 
 const handler = nextConnect();
 
@@ -56,16 +59,17 @@ handler.post((req, res) => {
       channelId,
       body,
     })
-    .then(async (data) => {
-      const messages = await req.db
-        .collection('messages')
-        .find({ channelId })
-        .toArray();
+    .then( (data) => {
+      pubnub.publish({
+        message: data.ops[0],
+        channel: 'channel-1',
+      }, (status, response) => {
+        // handle status, response
+      });
 
       res.status(201).json({
         status: 'ok',
         message: `Message with: ${body} was sent`,
-        messages,
       });
     })
     .catch(error => res.send({

@@ -4,8 +4,13 @@ import axios from 'axios';
 const ChannelContext = createContext();
 
 const reducer = (state, action) => {
-  console.log(action, state);
+  let messages;
+
   switch (action.type) {
+    case 'append':
+      messages = state.messages.slice();
+      messages.push(action.data);
+      return { messages };
     case 'set':
       return action.data;
     case 'clear':
@@ -19,6 +24,11 @@ const ChannelContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, { messages: [] });
   const dispatchProxy = (action) => {
     switch (action.type) {
+      case 'update':
+        return dispatch({
+          type: 'append',
+          data: action.data,
+        });
       case 'fetch':
         return axios.get('/api/messages')
           .then(res => ({

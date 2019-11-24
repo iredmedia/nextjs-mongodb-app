@@ -4,6 +4,9 @@ import { Avatar, Comment, Tooltip } from 'antd';
 
 const MyComment = (props) => {
   const { message } = props;
+
+  if (!message) return null;
+
   return (
     <Comment
       author={<a>Han Solo</a>}

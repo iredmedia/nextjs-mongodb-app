@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
   Layout,
   Affix,
@@ -18,6 +18,8 @@ import MyComment from '../components/MyComment';
 
 import PageLayout from '../components/pagelayout';
 import { ChannelContext, ChannelContextProvider } from '../components/ChannelContext';
+
+import PubNub from 'pubnub';
 
 const { Content } = Layout;
 
@@ -69,7 +71,6 @@ const MessagesList = (props) => {
 const MessageActions = Form.create({ name: 'send_message' })((props) => {
   const { form } = props;
   const { getFieldDecorator } = form;
-  const { dispatch } = useContext(ChannelContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -84,7 +85,7 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
           .then((data) => {
             if (data.status === 'ok') {
             //  Fetch the user data for the Channel context here
-              dispatch({ type: 'fetch' });
+            //   dispatch({ type: 'fetch' });
             }
           });
       }
@@ -120,6 +121,31 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
 });
 
 const ChannelPage = (props) => {
+  const { dispatch } = useContext(ChannelContext);
+
+  // When the component initializes, subscribe to the 'messages' channel
+  // to get new messages.
+  const pubnub = new PubNub({
+    subscribeKey: 'sub-c-97569a56-0e9f-11ea-9d7d-1a72d7432d4b', // This is safe to pub but should live elsewhere
+  });
+
+  useEffect(() => {
+    console.log('ran');
+    pubnub.subscribe({
+      channels: ['channel-1'],
+    });
+
+    pubnub.addListener({
+      message: ({ message }) => {
+        console.log('message!');
+        dispatch({
+          type: 'update',
+          data: message,
+        });
+      },
+    });
+  }, []);
+
   return (
     <PageLayout>
       <ChatHeader />
@@ -130,10 +156,8 @@ const ChannelPage = (props) => {
           minHeight: 280,
         }}
         >
-          <ChannelContextProvider>
-            <MessagesList />
-            <MessageActions />
-          </ChannelContextProvider>
+          <MessagesList />
+          <MessageActions />
         </div>
       </Content>
     </PageLayout>

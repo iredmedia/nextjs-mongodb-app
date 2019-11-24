@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Link from 'next/link';
 import { UserContext } from '../../components/UserContext';
-import Layout from '../../components/layout';
+import PageLayout from '../../components/pagelayout';
 
 const ProfilePage = () => {
   const {
@@ -14,7 +14,7 @@ const ProfilePage = () => {
 
   if (!isLoggedIn) return (<Layout><p>Please log in</p></Layout>);
   return (
-    <Layout>
+    <PageLayout>
       <style jsx>
         {`
           img {
@@ -26,25 +26,27 @@ const ProfilePage = () => {
       </style>
       <h1>Profile</h1>
       <div>
-        <img src={profilePicture} width="256" height="256" alt={name} />
+        <img src={profilePicture} width="256" height="256" alt={name}/>
         <p>
           Name:
           {' '}
-          { name }
+          {name}
         </p>
         <p>
           Bio:
           {' '}
-          { bio }
+          {bio}
         </p>
         <p>
           Email:
           {' '}
-          { email }
+          {email}
         </p>
       </div>
-      <Link href="/profile/settings"><button type="button">Edit</button></Link>
-    </Layout>
+      <Link href="/profile/settings">
+        <button type="button">Edit</button>
+      </Link>
+    </PageLayout>
   );
 };
 

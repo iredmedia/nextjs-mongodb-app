@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axioswal from 'axioswal';
 import { UserContext } from '../../components/UserContext';
-import Layout from '../../components/layout';
+import PageLayout from '../../components/pagelayout';
 
 const ProfileSection = ({ user: { name: initialName, bio: initialBio }, dispatch }) => {
   const [name, setName] = useState(initialName);
@@ -12,7 +12,10 @@ const ProfileSection = ({ user: { name: initialName, bio: initialBio }, dispatch
     axioswal
       .patch(
         '/api/user',
-        { name, bio },
+        {
+          name,
+          bio,
+        },
       )
       .then(() => {
         dispatch({ type: 'fetch' });
@@ -99,10 +102,10 @@ const SettingPage = () => {
 
   if (!isLoggedIn) return (<Layout><p>Please log in</p></Layout>);
   return (
-    <Layout>
+    <PageLayout>
       <h1>Settings</h1>
       <ProfileSection user={user} dispatch={dispatch} />
-    </Layout>
+    </PageLayout>
   );
 };
 

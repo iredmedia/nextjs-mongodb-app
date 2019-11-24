@@ -43,7 +43,7 @@ export default ({ handleLogout }) => {
         {
           isLoggedIn
           && ([
-            <Menu.Item>Welcome {name}</Menu.Item>,
+            <Menu.Item key={'welcome'}>Welcome {name}</Menu.Item>,
             <Menu.Item onClick={handleLogout} key="logout"><a>Logout</a></Menu.Item>,
           ])
         }

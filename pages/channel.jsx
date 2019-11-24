@@ -16,8 +16,8 @@ import {
 import axioswal from 'axioswal';
 import MyComment from '../components/MyComment';
 
-import { UserContext } from '../components/UserContext';
 import PageLayout from '../components/pagelayout';
+import { ChannelContext, ChannelContextProvider } from '../components/ChannelContext';
 
 const { Content } = Layout;
 
@@ -55,20 +55,41 @@ const ChatHeader = () => (
   </Affix>
 );
 
-const MessagesList = () => (
-  <Row gutter={[40, 40]}>
-    <Col span={24}>
-      <MyComment />
-      <MyComment />
-      <MyComment />
-      <MyComment />
-    </Col>
-  </Row>
-);
+const MessagesList = (props) => {
+  const { state: { messages } } = useContext(ChannelContext);
+  return (
+    <Row gutter={[40, 40]}>
+      <Col span={24}>
+        {messages && messages.map((message) => <MyComment key={message._id} message={message} />)}
+      </Col>
+    </Row>
+  );
+}
 
-const MessageActions = Form.create({ name: 'normal_login' })((props) => {
-  const { form, handleSubmit } = props;
+const MessageActions = Form.create({ name: 'send_message' })((props) => {
+  const { form } = props;
   const { getFieldDecorator } = form;
+  const { dispatch } = useContext(ChannelContext);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    form.validateFields((err, values) => {
+      const { body } = values;
+      if (!err) {
+        axioswal
+          .post('/api/messages', {
+            body,
+          })
+          .then((data) => {
+            if (data.status === 'ok') {
+            //  Fetch the user data for the Channel context here
+              dispatch({ type: 'fetch' });
+            }
+          });
+      }
+    });
+  };
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -99,29 +120,6 @@ const MessageActions = Form.create({ name: 'normal_login' })((props) => {
 });
 
 const ChannelPage = (props) => {
-  const { form } = props;
-
-  const handleSubmit = (event) => {
-    const { dispatch } = useContext(UserContext);
-
-    event.preventDefault();
-    form.validateFields((err, values) => {
-      const { body } = values;
-      if (!err) {
-        axioswal
-          .post('/api/messages', {
-            body,
-          })
-          .then((data) => {
-            if (data.status === 'ok') {
-            //  Fetch the user data for the Channel context here
-              dispatch({ type: 'fetch' });
-            }
-          });
-      }
-    });
-  };
-
   return (
     <PageLayout>
       <ChatHeader />
@@ -132,8 +130,10 @@ const ChannelPage = (props) => {
           minHeight: 280,
         }}
         >
-          <MessagesList />
-          <MessageActions handleSubmit={handleSubmit} />
+          <ChannelContextProvider>
+            <MessagesList />
+            <MessageActions />
+          </ChannelContextProvider>
         </div>
       </Content>
     </PageLayout>

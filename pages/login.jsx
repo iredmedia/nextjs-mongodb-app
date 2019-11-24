@@ -85,7 +85,7 @@ const LoginPage = (props) => {
             </Form.Item>
             <Form.Item>
               {getFieldDecorator('remember', {
-                valuePropName: 'checked',
+                valauePropName: 'checked',
                 initialValue: true,
               })(<Checkbox>Remember me</Checkbox>)}
               <a className="login-form-forgot">

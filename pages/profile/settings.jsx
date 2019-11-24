@@ -100,7 +100,7 @@ const ProfileSection = ({ user: { name: initialName, bio: initialBio }, dispatch
 const SettingPage = () => {
   const { state: { isLoggedIn, user }, dispatch } = useContext(UserContext);
 
-  if (!isLoggedIn) return (<Layout><p>Please log in</p></Layout>);
+  if (!isLoggedIn) return (<PageLayout><p>Please log in</p></PageLayout>);
   return (
     <PageLayout>
       <h1>Settings</h1>

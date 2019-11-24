@@ -12,7 +12,7 @@ const ProfilePage = () => {
     },
   } = useContext(UserContext);
 
-  if (!isLoggedIn) return (<Layout><p>Please log in</p></Layout>);
+  if (!isLoggedIn) return (<PageLayout><p>Please log in</p></PageLayout>);
   return (
     <PageLayout>
       <style jsx>

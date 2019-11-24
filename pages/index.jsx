@@ -23,6 +23,16 @@ const { Content } = Layout;
 
 const IndexPage = () => {
   const { state: { isLoggedIn, user: { name } } } = useContext(UserContext);
+  if (!isLoggedIn) {
+    return (
+      <PageLayout>
+        <h2 style={{ textAlign: 'center', margin: '50px 0' }}>
+          Login to get started!
+        </h2>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <Affix>

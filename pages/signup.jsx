@@ -15,11 +15,12 @@ const SignupPage = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const { name, email, password } = props.form.getFieldsValue();
     axioswal
       .post('/api/users', {
-        // name,
-        // email,
-        // password,
+        name,
+        email,
+        password,
       })
       .then((data) => {
         if (data.status === 'ok') {

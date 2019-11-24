@@ -17,11 +17,12 @@ const LoginPage = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     props.form.validateFields((err, values) => {
+      const { email, password} = values;
       if (!err) {
         axioswal
           .post('/api/authenticate', {
-          // email,
-          // password,
+            email,
+            password,
           })
           .then((data) => {
             if (data.status === 'ok') {

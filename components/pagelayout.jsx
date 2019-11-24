@@ -9,9 +9,8 @@ import Navbar from './Navbar';
 const { Footer } = Layout;
 
 export default ({ children }) => {
-  const { state: { isLoggedIn }, dispatch } = useContext(UserContext);
+  const { dispatch } = useContext(UserContext);
   const handleLogout = (event) => {
-    event.preventDefault();
     axioswal
       .delete('/api/session')
       .then((data) => {
@@ -44,7 +43,6 @@ export default ({ children }) => {
         />
       </Head>
       <Navbar
-        isLoggedIn={isLoggedIn}
         handleLogout={handleLogout}
       />
 

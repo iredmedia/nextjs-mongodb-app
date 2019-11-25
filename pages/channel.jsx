@@ -75,9 +75,15 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    console.log('submitted');
+
     form.validateFields((err, values) => {
       const { body } = values;
+      console.log('validateFields');
+
       if (!err) {
+        console.log('!err');
+
         const pubnub = new PubNub({
           publishKey: process.env.PUBNUB_PUB_KEY,
           subscribeKey: process.env.PUBNUB_SUB_KEY,
@@ -86,7 +92,9 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
         pubnub.publish({
           message: data.ops[0],
           channel: 'channel-1',
-        }, (status, response) => console.log(status, response));
+        }, (status, response) => console.log('pubnub response', status, response));
+
+        console.log('fin');
       }
     });
   };

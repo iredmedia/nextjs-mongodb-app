@@ -90,7 +90,11 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
         });
 
         pubnub.publish({
-          message: data.ops[0],
+          message: {
+            body,
+            channelId: 'channel-1',
+            user: '1',
+          },
           channel: 'channel-1',
         }, (status, response) => console.log('pubnub response', status, response));
 

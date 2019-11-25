@@ -78,16 +78,15 @@ const MessageActions = Form.create({ name: 'send_message' })((props) => {
     form.validateFields((err, values) => {
       const { body } = values;
       if (!err) {
-        axioswal
-          .post('/api/messages', {
-            body,
-          })
-          .then((data) => {
-            if (data.status === 'ok') {
-            //  Fetch the user data for the Channel context here
-            //   dispatch({ type: 'fetch' });
-            }
-          });
+        const pubnub = new PubNub({
+          publishKey: process.env.PUBNUB_PUB_KEY,
+          subscribeKey: process.env.PUBNUB_SUB_KEY,
+        });
+
+        pubnub.publish({
+          message: data.ops[0],
+          channel: 'channel-1',
+        }, (status, response) => console.log(status, response));
       }
     });
   };

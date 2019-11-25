@@ -4,7 +4,9 @@
   "build": {
     "env": {
       "MONGODB_URI": "@mongodb_uri",
-      "DB_NAME": "@db_name"
+      "DB_NAME": "@db_name",
+      "PUBNUB_SUB_KEY": "@pubnub_sub_key",
+      "PUBNUB_PUB_KEY": "@pubnub_pub_key"
     }
   }
 }
